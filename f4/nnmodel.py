@@ -1,5 +1,5 @@
 import tensorflow as tf
-from keras import backend as K
+from tensorflow.keras import backend as K
 
 
 class ModelConfig:
@@ -12,12 +12,13 @@ dr = 0.25
 
 
 def make(mc):
+
     ips = None
 
     if K.image_data_format() == 'channels_last':
-        ips = (mc.width, mc.height, 3)
+        ips = (mc.height, mc.width, 3)
     else:
-        ips = (3, mc.width, mc.height)
+        ips = (3, mc.height, mc.width)
 
     seq = tf.keras.Sequential()
     seq.add(tf.keras.layers.Conv2D(filters=64, kernel_size=(3, 3), activation='relu', input_shape=ips, padding="same"))
@@ -37,7 +38,7 @@ def make(mc):
     seq.add(tf.keras.layers.Dropout(dr))
 
     seq.add(tf.keras.layers.Flatten())
-    seq.add(tf.keras.layers.Dense(256, activation='relu'))
+    seq.add(tf.keras.layers.Dense(512, activation='relu'))
     seq.add(tf.keras.layers.BatchNormalization())
     seq.add(tf.keras.layers.Dropout(dr))
     seq.add(tf.keras.layers.Dense(mc.output_cat, activation='softmax'))
