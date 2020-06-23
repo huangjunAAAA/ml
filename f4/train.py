@@ -5,8 +5,8 @@ import keras
 from datetime import datetime
 
 
-y, x = ld.loadsample("./data/output")
-vy, vx = ld.loadsample("./data/val")
+y, x = ld.loadsample("../samples/output1_5k")
+vy, vx = ld.loadsample("../samples/val1")
 # tx, ty, vx, vy = ld.extravset(x, y)
 
 cfg = nnm.ModelConfig()
@@ -20,7 +20,7 @@ print(cnn.summary())
 cnn.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
 
-logdir = "./logs/" + datetime.now().strftime("%Y%m%d-%H%M%S")
+logdir = "../tflogs/f4/" + datetime.now().strftime("%Y%m%d-%H%M%S")
 tensorboard_callback = keras.callbacks.TensorBoard(log_dir=logdir, profile_batch=2, histogram_freq=1, write_grads=True)
 cnn.fit(x=x, y=y, batch_size=500, epochs=20, validation_data=(vx, vy), callbacks=[tensorboard_callback])
 
