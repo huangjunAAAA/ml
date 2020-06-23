@@ -5,7 +5,7 @@ def fromalphabat(a):
     if i > 96:
         i -= 6
     i -= 65
-    if i > 26:
+    if i >= 26:
         i -= 26
     onehot = np.zeros(shape=[26], dtype=int)
     onehot[i] = 1

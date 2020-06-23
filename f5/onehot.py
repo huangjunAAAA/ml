@@ -8,7 +8,7 @@ def fromalphabat(l):
         if i > 96:
             i -= 6
         i -= 65
-        if i > 26:
+        if i >= 26:
             i -= 26
         ilst.append(i)
 
@@ -41,7 +41,7 @@ def fromonehot(o):
 
 
 if __name__ == "__main__":
-    x1 = fromalphabat('ikZz')
+    x1 = fromalphabat('Jyya')
     print("x1=", x1)
     x2 = fromonehot(x1)
     print("x2=", x2)

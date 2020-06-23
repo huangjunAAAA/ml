@@ -18,8 +18,11 @@ def loadsample(sdir):
             continue
         imgs.append(img)
         y = parts[1].replace('\n', '').replace('\r', '')
-        y2 = oh.fromalphabat(y)
-        ys.append(y2)
+        try:
+            y2 = oh.fromalphabat(y)
+            ys.append(y2)
+        except IndexError:
+            print("error !:", y)
 
     ys = np.array(ys)
     imgs = np.array(imgs)
