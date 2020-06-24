@@ -42,7 +42,7 @@ def fromonehot(o):
 
 if __name__ == "__main__":
     x1 = fromalphabat('Jyya')
-    print("x1=", x1)
+    print("x1=", len(x1))
     x2 = fromonehot(x1)
     print("x2=", x2)
 

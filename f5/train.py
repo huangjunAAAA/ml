@@ -3,9 +3,10 @@ import nnmodel as nnm
 import onehot as oh
 import tensorflow.keras as keras
 from datetime import datetime
+import os
 
 
-y, x = ld.loadsample("../samples/output4_24w")
+y, x = ld.loadsample("../samples/output")
 vy, vx = ld.loadsample("../samples/val4")
 # tx, ty, vx, vy = ld.extravset(x, y)
 
@@ -14,22 +15,20 @@ cfg.height = x.shape[1]
 cfg.width = x.shape[2]
 cfg.num_of_sample = y.shape[0]
 cfg.output_cat = y.shape[1]
-cnn = nnm.make(cfg)
+cnn = None
+ckpath = "../checkpoints/f5"
+if os.path.exists(ckpath):
+    cnn = keras.models.load_model(ckpath, custom_objects={'accuracy': nnm.more_char_acc})
+else:
+    cnn = nnm.make(cfg)
+    cnn.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy', nnm.more_char_acc])
 print(cnn.summary())
-
-cnn.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
 
 logdir = "../tflogs/f5/" + datetime.now().strftime("%Y%m%d-%H%M%S")
-tensorboard_callback = keras.callbacks.TensorBoard(log_dir=logdir, profile_batch=2, histogram_freq=1, write_grads=True)
-cnn.fit(x=x, y=y, batch_size=600, epochs=100, validation_split=0.1, callbacks=[tensorboard_callback])
+logcb = keras.callbacks.TensorBoard(log_dir=logdir, profile_batch=2, histogram_freq=1, write_grads=True)
+chkcb = keras.callbacks.ModelCheckpoint(filepath=ckpath, verbose=1)
+cnn.fit(x=x, y=y, batch_size=100, epochs=5, validation_data=(vx, vy), callbacks=[logcb, chkcb])
 
-result2 = cnn.predict(vx)
-print("predict result:")
-for i in result2:
-    print(oh.fromonehot(i), end='|')
 
-print("\nactual result:")
-for i in vy:
-    print(oh.fromonehot(i), end='|')
 

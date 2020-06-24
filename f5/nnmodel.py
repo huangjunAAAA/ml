@@ -1,5 +1,6 @@
 import tensorflow as tf
 from tensorflow.keras import backend as K
+import numpy as np
 
 
 class ModelConfig:
@@ -10,6 +11,17 @@ class ModelConfig:
 
 dr = 0.25
 
+def more_char_acc(y_true, y_pred):
+    y1 = tf.reshape(y_pred, [26, y_pred.get_shape()[1]//26])
+    y1max = tf.math.argmax(y1, axis=0)
+    y2 = tf.reshape(y_true, [26, y_true.get_shape()[1]//26])
+    y2max = tf.math.argmax(y2, axis=0)
+    r1 = tf.equal(y1max, y2max)
+    k = tf.numpy_function(countTrue, [r1], tf.float32)
+    return k
+
+def countTrue(r1):
+    return np.mean(r1)
 
 def make(mc):
     ips = None
