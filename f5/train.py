@@ -6,7 +6,7 @@ from datetime import datetime
 import os
 
 
-y, x = ld.loadsample("../samples/output")
+y, x = ld.loadsample("../samples/output4_6w")
 vy, vx = ld.loadsample("../samples/val4")
 # tx, ty, vx, vy = ld.extravset(x, y)
 
