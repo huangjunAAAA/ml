@@ -14,7 +14,7 @@ cfg.height = x.shape[1]
 cfg.width = x.shape[2]
 cfg.num_of_sample = y.shape[0]
 cfg.output_cat = y.shape[1]
-cnn = nnm.make(cfg)
+cnn = nnm.make(cfg, True)
 print(cnn.summary())
 
 cnn.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
