@@ -1,5 +1,5 @@
 import loadsamples as ld
-import nnmodel2 as nnm
+import crnnmodel as nnm
 import tensorflow.keras as keras
 from datetime import datetime
 import os
@@ -13,7 +13,7 @@ cfg = nnm.ModelConfig()
 cfg.height = x.shape[1]
 cfg.width = x.shape[2]
 cfg.num_of_sample = y.shape[0]
-cfg.output_cat = y.shape[1]
+cfg.output_cat = 26
 cnn = None
 ckpath = "../checkpoints/f5-ckt"
 if os.path.exists(ckpath):

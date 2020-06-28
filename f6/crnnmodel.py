@@ -39,12 +39,14 @@ def make(mc):
 
     fms = tf.reshape(bn4, [-1, mc.width, 260])
 
-    lstm = tf.keras.layers.LSTM(260, return_sequences=True)(fms)
-    lstm2 = tf.keras.layers.LSTM(260, return_sequences=True, go_backwards=True)(lstm)
+    lstm = tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(units=260, return_sequences=True, dropout=0.5))(fms)
+    gap = tf.reduce_mean(lstm, axis=2)
+    gap1 = tf.reshape(gap, [-1, mc.width, 1])
 
-    print(lstm2.shape)
+    outputs = tf.keras.layers.Dense(mc.output_cat, activation="softmax")(gap1)
+    print(outputs.shape)
 
-    model = tf.keras.Model(inputs=inputs, outputs=lstm)
+    model = tf.keras.Model(inputs=inputs, outputs=outputs)
     return model
 
 
