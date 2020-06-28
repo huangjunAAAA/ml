@@ -11,3 +11,4 @@ tflogs
 venv
 __pycache__
 .idea
+checkpoints
