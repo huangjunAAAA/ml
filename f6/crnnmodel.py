@@ -40,8 +40,9 @@ def make(mc):
     fms = tf.reshape(bn4, [-1, mc.width, 260])
 
     lstm = tf.keras.layers.LSTM(260, return_sequences=True)(fms)
+    lstm2 = tf.keras.layers.LSTM(260, return_sequences=True, go_backwards=True)(lstm)
 
-    print(lstm.shape)
+    print(lstm2.shape)
 
     model = tf.keras.Model(inputs=inputs, outputs=lstm)
     return model
