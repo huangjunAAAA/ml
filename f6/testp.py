@@ -20,3 +20,4 @@ cnn = None
 cnn = nnm.make(cfg)
 # cnn.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 print(cnn.summary())
+print(cnn.outputs)

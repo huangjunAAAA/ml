@@ -1,7 +1,7 @@
 import numpy as np
 
 def fromalphabat(l):
-    alst=list(l)
+    alst=list(l.replace(' ', ''))
     ilst=[]
     for a in alst:
         i = ord(a)
@@ -12,9 +12,11 @@ def fromalphabat(l):
             i -= 26
         ilst.append(i)
 
-    onehot = np.zeros(shape=[len(ilst), 26], dtype=int)
+    onehot = []
     for i in range(len(ilst)):
-        onehot[i, ilst[i]] = 1
+        k = np.zeros([26], dtype=int)
+        k[ilst[i]] = 1
+        onehot.append(k)
 
     return onehot
 
@@ -28,8 +30,8 @@ def fromonehot(o):
             if mx == 0 or o[j][i] > mx:
                 mx = o[j][i]
                 midx = i
-        if midx > 26:
-            r.append(chr(midx + 71))
+        if midx >= 26:
+            r.append(' ')
         else:
             r.append(chr(midx + 65))
 
@@ -39,7 +41,7 @@ def fromonehot(o):
 
 if __name__ == "__main__":
     x1 = fromalphabat('JyyzzZta')
-    print("x1=", len(x1))
+    print("x1=", (x1))
     x2 = fromonehot(x1)
     print("x2=", x2)
 

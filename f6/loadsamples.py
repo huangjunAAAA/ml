@@ -8,6 +8,7 @@ def loadsample(sdir):
 
     imgs = []
     ys = []
+    max_ylen = -1
     for line in open(sdir + "/train.txt"):
         parts = line.split(" ")
         d = parts[0].split("/")
@@ -17,18 +18,28 @@ def loadsample(sdir):
             print("img is none")
             continue
         imgs.append(img)
-        y = parts[1].replace('\n', '').replace('\r', '')
+        y = ''
+        for j in range(1,len(parts)):
+            y = y + (parts[j])
+        y = y.replace('\n', '').replace('\r', '')
+        if max_ylen < len(y):
+            max_ylen = len(y)
         try:
             y2 = oh.fromalphabat(y)
             ys.append(y2)
         except IndexError:
             print("error !:", y)
 
-    ys = np.array(ys)
+    for i in range(len(ys)):
+        pad_num = max_ylen - len(ys[i])
+        if pad_num > 0:
+            for k in range(pad_num):
+                ys[i].append(np.zeros([26], int))
+
     imgs = np.array(imgs)
     imgs = np.reshape(imgs, (imgs.shape[0], imgs.shape[1], imgs.shape[2], 3))
 
-    return ys, imgs
+    return np.array(ys), imgs
 
 
 def extravset(x, y):
@@ -51,6 +62,5 @@ def extravset(x, y):
 
 if __name__ == "__main__":
 
-    vy, vx = loadsample("../samples/output4_2k")
-    for i in vy:
-        print(oh.fromonehot(i), end='|')
+    vy, vx = loadsample("../samples/output")
+    print(vy)
