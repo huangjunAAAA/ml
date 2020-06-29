@@ -26,7 +26,7 @@ def para_equal(t):
         return tf.constant(0)
 
 ta1 = tf.convert_to_tensor(a1)
-print(ta1)
+tf.print(ta1)
 
 ta2 = tf.convert_to_tensor(a2)
 print(ta2)

@@ -1,12 +1,13 @@
+import os
+os.environ["CUDA_VISIBLE_DEVICES"]="-1"
 import loadsamples as ld
 import crnnmodel as nnm
 import tensorflow.keras as keras
+
 from datetime import datetime
-import os
 
-
-y, x = ld.loadsample("../samples/valV")
-vy, vx = ld.loadsample("../samples/valV")
+y, x = ld.loadsample("../samples/output")
+vy, vx = ld.loadsample("../samples/output")
 # tx, ty, vx, vy = ld.extravset(x, y)
 
 cfg = nnm.ModelConfig()
@@ -27,7 +28,7 @@ print(crnn.summary())
 logdir = "../tflogs/f6/" + datetime.now().strftime("%Y%m%d-%H%M%S")
 logcb = keras.callbacks.TensorBoard(log_dir=logdir, profile_batch=2, histogram_freq=1, write_grads=True)
 chkcb = keras.callbacks.ModelCheckpoint(filepath=ckpath, verbose=1)
-crnn.fit(x=x, y=y, batch_size=5, epochs=5, validation_data=(vx, vy), callbacks=[logcb, chkcb])
+crnn.fit(x=x, y=y, batch_size=2, epochs=1, validation_data=(vx, vy), callbacks=[logcb, chkcb])
 
 
 

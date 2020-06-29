@@ -6,8 +6,8 @@ from datetime import datetime
 import os
 
 
-y, x = ld.loadsample("../samples/valV")
-vy, vx = ld.loadsample("../samples/valV")
+y, x = ld.loadsample("../samples/output")
+vy, vx = ld.loadsample("../samples/output")
 # tx, ty, vx, vy = ld.extravset(x, y)
 
 cfg = nnm.ModelConfig()

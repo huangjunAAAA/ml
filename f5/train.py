@@ -1,5 +1,5 @@
 import loadsamples as ld
-import nnmodel2 as nnm
+import nnmodel3 as nnm
 import tensorflow.keras as keras
 from datetime import datetime
 import os
