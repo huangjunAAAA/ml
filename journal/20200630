@@ -1,0 +1,3 @@
+很愉快的发现了样本数不整除批次数的bug。
+
+再次很愉快的发现了 tf.keras.backend.ctc_decode 已经帮忙处理了SparseTensor
