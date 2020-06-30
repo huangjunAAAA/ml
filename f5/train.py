@@ -4,6 +4,7 @@ import tensorflow.keras as keras
 from datetime import datetime
 import os
 
+ENABLECKT=True
 
 y, x = ld.loadsample("../samples/output4_24w")
 vy, vx = ld.loadsample("../samples/val4")
@@ -14,9 +15,10 @@ cfg.height = x.shape[1]
 cfg.width = x.shape[2]
 cfg.num_of_sample = y.shape[0]
 cfg.output_cat = y.shape[1]
+
 cnn = None
 ckpath = "../checkpoints/f5-ckt"
-if os.path.exists(ckpath):
+if ENABLECKT and os.path.exists(ckpath):
     cnn = keras.models.load_model(ckpath, custom_objects={'more_char_acc': nnm.more_char_acc})
 else:
     cnn = nnm.make(cfg)

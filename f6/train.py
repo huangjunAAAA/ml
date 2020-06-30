@@ -1,5 +1,7 @@
 import os
 # os.environ["CUDA_VISIBLE_DEVICES"]="-1"
+ENABLECKT=True
+
 import loadsamples as ld
 import crnnmodel as nnm
 import tensorflow.keras as keras
@@ -17,7 +19,7 @@ cfg.num_of_sample = y.shape[0]
 cfg.output_cat = 26
 crnn = None
 ckpath = "../checkpoints/f6-ckt"
-if os.path.exists(ckpath):
+if ENABLECKT and os.path.exists(ckpath):
     crnn = keras.models.load_model(ckpath)
 else:
     crnn = nnm.make(cfg)
