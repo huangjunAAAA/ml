@@ -45,7 +45,7 @@ def make(mc):
 
     fms = tf.reshape(bn4, [-1, mc.width, 260])
 
-    lstm = tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(units=260, return_sequences=True, dropout=0.5))(fms)
+    lstm = tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(units=128, return_sequences=True, dropout=dr))(fms)
     gap = tf.reduce_mean(lstm, axis=2)
     gap1 = tf.reshape(gap, [-1, mc.width, 1])
 
