@@ -28,7 +28,7 @@ print(crnn.summary())
 logdir = "../tflogs/f6/" + datetime.now().strftime("%Y%m%d-%H%M%S")
 logcb = keras.callbacks.TensorBoard(log_dir=logdir, profile_batch=2, histogram_freq=1, write_grads=True)
 chkcb = keras.callbacks.ModelCheckpoint(filepath=ckpath, verbose=1)
-crnn.fit(x=x, y=y, batch_size=2, epochs=1, validation_data=(vx, vy), callbacks=[logcb, chkcb])
+crnn.fit(x=x, y=y, batch_size=5, epochs=1, validation_data=(vx, vy), callbacks=[logcb, chkcb])
 
 
 

@@ -8,12 +8,15 @@ class ModelConfig:
     height = 0
     output_cat = 52
 
+
 def show_shape(y_true, y_pred):
     # print(y_true.shape)
     # print(y_pred.shape)
     return 0.1
 
+
 dr = 0.25
+
 
 def make(mc):
     ips = None
@@ -46,38 +49,46 @@ def make(mc):
     gap = tf.reduce_mean(lstm, axis=2)
     gap1 = tf.reshape(gap, [-1, mc.width, 1])
 
-    outputs = tf.keras.layers.Dense(mc.output_cat+1, activation='softmax')(gap1)
+    outputs = tf.keras.layers.Dense(mc.output_cat + 1, activation='softmax')(gap1)
 
     model = tf.keras.Model(inputs=inputs, outputs=outputs)
     return model
 
+
 def ctc_loss(y_true, y_pred):
     y_idxlst = tf.argmax(y_true, axis=2)
-    tf.print('y_idxlst',y_idxlst)
     y_label_length = tf.reduce_sum(y_true, axis=[1, 2])
     label_length = tf.reshape(y_label_length, [y_label_length.shape[0], 1])
     input_length = tf.fill([label_length.shape[0], 1], y_pred.shape[1])
-    return tf.keras.backend.ctc_batch_cost(y_true=y_idxlst, y_pred=y_pred, input_length=input_length, label_length=label_length)
+    return tf.keras.backend.ctc_batch_cost(y_true=y_idxlst, y_pred=y_pred, input_length=input_length,
+                                           label_length=label_length)
+
 
 def ctc_acc(y_true, y_pred):
-    # batch_size = y_true.shape[0]
-    # y_idxlst = tf.argmax(y_true, axis=2)
-    # max_len = y_true.shape[1]
-    # input_length = tf.fill([batch_size], y_pred.shape[1])
-    # y_pred_decoded = tf.keras.backend.ctc_decode(y_pred, input_length,greedy=False)
-    # print('y_pred_decoded')
-    # print(y_pred_decoded)
+    batch_size = y_true.shape[0]
+    input_length = tf.fill([batch_size], y_pred.shape[1])
+    y_pred_decoded, y_log_probability = tf.keras.backend.ctc_decode(y_pred=y_pred, input_length=input_length,
+                                                                    greedy=False)
 
-    return 0.1
+    y_idxlst_float = tf.argmax(y_true, axis=2)
+    y_idxlst_32 = tf.cast(y_idxlst_float, tf.int32)
+    y_label_length = tf.reduce_sum(y_true, axis=[1, 2])
 
-def printx(x):
-    # global y1
-    # y1 = x * x
-    # print("previous x")
-    # tf.print(y1)
-    #
-    # print("now x")
-    # tf.print(x, 'stdout')
-    #
-    # y1 += x
-    return x
+    correct_bool_list = tf.map_fn(fn=limited_eq, elems=(y_pred_decoded[0], y_idxlst_32, y_label_length), dtype=tf.bool)
+    correct_v = tf.cast(correct_bool_list, tf.int32)
+    correct_items = tf.reduce_sum(correct_v)
+
+    return correct_items/batch_size
+
+
+def limited_eq(t):
+    pred, y, length = t
+    length_32 = tf.cast(length, tf.int32)
+    rlst = tf.range(start=0, limit=length_32, dtype=tf.int32)
+    pred_64 = tf.gather(params=pred, indices=rlst)
+    pred_32 = tf.cast(pred_64, tf.int32)
+    y1 = tf.gather(params=y, indices=rlst)
+    limited_result = tf.equal(y1, pred_32)
+    limited_32 = tf.cast(limited_result, tf.int32)
+    limited_vlen = tf.reduce_sum(limited_32)
+    return tf.equal(limited_vlen, length_32)

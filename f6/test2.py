@@ -2,6 +2,7 @@
 import numpy as np
 a1 = np.array([[1, 0, 0], [0, 1, 0], [1, 0, 0]])
 a2 = np.array([[1, 2, 1], [2, 1, 0], [1, 0, 0]])
+a3 = np.array([1,2,3,4,5,6,7])
 # print(a1)
 # a2 = np.pad(a1,pad_width=2)
 # print(a2)
@@ -25,14 +26,27 @@ def para_equal(t):
     else:
         return tf.constant(0)
 
+def test(t):
+    t1,t2=t
+    print(t1.numpy())
+    print(t2.numpy())
+    return tf.constant(9)
+
 ta1 = tf.convert_to_tensor(a1)
-tf.print(ta1)
+# tf.print(ta1)
 
-ta2 = tf.convert_to_tensor(a2)
-print(ta2)
+ta2 = tf.convert_to_tensor(a3)
+# print(ta2)
 
-_result = tf.map_fn(fn=para_equal, elems=(ta1, ta2), dtype=tf.int32)
-print(_result)
+# _result = tf.map_fn(fn=test, elems=(ta1, ta2), dtype=tf.int32)
+# print(_result)
+
+limit_len=4
+rangelst=tf.range(0, tf.constant(limit_len))
+result = tf.gather(a3, rangelst)
+print(result)
+# ss=tf.sparse.SparseTensor(indices=[[0, 0], [1, 2]], values=[1, 2], dense_shape=[3, 4])
+# print(ss)
 
 # mta1=tf.argmax(ta1,axis=2)
 # # print(mta1)
