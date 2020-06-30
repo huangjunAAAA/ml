@@ -27,27 +27,40 @@ def make(mc):
         ips = (3, mc.height, mc.width)
 
     inputs = tf.keras.Input(shape=ips)
-    cov1 = tf.keras.layers.Conv2D(filters=104, kernel_size=(3, 3), activation='relu', padding="same")(inputs)
-    m1 = tf.keras.layers.MaxPool2D(pool_size=(2, 1))(cov1)
+    cov1 = tf.keras.layers.Conv2D(filters=32, kernel_size=(3, 3), activation='relu', padding="same")(inputs)
+    cov2 = tf.keras.layers.Conv2D(filters=32, kernel_size=(3, 3), activation='relu', padding="same")(cov1)
+    m1 = tf.keras.layers.MaxPool2D(pool_size=(2, 1))(cov2)
     bn1 = tf.keras.layers.BatchNormalization()(m1)
 
-    cov2 = tf.keras.layers.Conv2D(filters=156, kernel_size=(3, 3), activation='relu', padding="same")(bn1)
-    m2 = tf.keras.layers.MaxPool2D(pool_size=(2, 1))(cov2)
+    cov3 = tf.keras.layers.Conv2D(filters=64, kernel_size=(3, 3), activation='relu', padding="same")(bn1)
+    cov4 = tf.keras.layers.Conv2D(filters=64, kernel_size=(3, 3), activation='relu', padding="same")(cov3)
+    m2 = tf.keras.layers.MaxPool2D(pool_size=(2, 1))(cov4)
     bn2 = tf.keras.layers.BatchNormalization()(m2)
 
-    cov3 = tf.keras.layers.Conv2D(filters=208, kernel_size=(3, 3), activation='relu', padding="same")(bn2)
-    m3 = tf.keras.layers.MaxPool2D(pool_size=(2, 1))(cov3)
+    cov5 = tf.keras.layers.Conv2D(filters=128, kernel_size=(3, 3), activation='relu', padding="same")(bn2)
+    cov6 = tf.keras.layers.Conv2D(filters=128, kernel_size=(3, 3), activation='relu', padding="same")(cov5)
+    cov7 = tf.keras.layers.Conv2D(filters=128, kernel_size=(3, 3), activation='relu', padding="same")(cov6)
+    m3 = tf.keras.layers.MaxPool2D(pool_size=(2, 1))(cov7)
     bn3 = tf.keras.layers.BatchNormalization()(m3)
 
-    cov4 = tf.keras.layers.Conv2D(filters=260, kernel_size=(3, 3), activation='relu', padding="same")(bn3)
-    m4 = tf.keras.layers.MaxPool2D(pool_size=(2, 1))(cov4)
-    bn4 = tf.keras.layers.BatchNormalization()(m4)
+    cov8 = tf.keras.layers.Conv2D(filters=256, kernel_size=(3, 3), activation='relu', padding="same")(bn3)
+    cov9 = tf.keras.layers.Conv2D(filters=256, kernel_size=(3, 3), activation='relu', padding="same")(cov8)
+    cov10 = tf.keras.layers.Conv2D(filters=256, kernel_size=(3, 3), activation='relu', padding="same")(cov9)
+    m3 = tf.keras.layers.MaxPool2D(pool_size=(2, 1))(cov10)
+    bn3 = tf.keras.layers.BatchNormalization()(m3)
 
-    fms = tf.reshape(bn4, [-1, mc.width, 260])
+    cov11 = tf.keras.layers.Conv2D(filters=512, kernel_size=(3, 3), activation='relu', padding="same")(bn3)
+    cov12 = tf.keras.layers.Conv2D(filters=512, kernel_size=(3, 3), activation='relu', padding="same")(cov11)
+    cov13 = tf.keras.layers.Conv2D(filters=512, kernel_size=(3, 3), activation='relu', padding="same")(cov12)
+    bn4 = tf.keras.layers.BatchNormalization()(cov13)
 
-    lstm = tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(units=128, return_sequences=True, dropout=dr))(fms)
+    print(bn4.shape)
+    fms = tf.reshape(bn4, [-1, mc.width, 512])
 
-    outputs = tf.keras.layers.Dense(mc.output_cat + 1, activation='softmax')(lstm)
+    lstm1 = tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(units=256, return_sequences=True, dropout=dr),
+                                          merge_mode='sum')(fms)
+    lstm2 = tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(units=256, return_sequences=True, dropout=dr))(lstm1)
+    outputs = tf.keras.layers.Dense(mc.output_cat + 1, activation='softmax')(lstm2)
 
     model = tf.keras.Model(inputs=inputs, outputs=outputs)
     return model
