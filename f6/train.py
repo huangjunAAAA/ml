@@ -20,10 +20,10 @@ cfg.output_cat = 26
 crnn = None
 ckpath = "../checkpoints/f6-ckt"
 if ENABLECKT and os.path.exists(ckpath):
-    crnn = keras.models.load_model(ckpath, custom_objects={'ctc_acc':nnm.ctc_acc})
+    crnn = keras.models.load_model(ckpath, compile=False)
 else:
     crnn = nnm.make(cfg)
-    crnn.compile(optimizer='adam', loss=nnm.ctc_loss, metrics=[nnm.ctc_acc])
+crnn.compile(optimizer='adam', loss=nnm.ctc_loss, metrics=[nnm.ctc_acc])
 print(crnn.summary())
 
 
