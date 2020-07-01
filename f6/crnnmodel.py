@@ -30,24 +30,29 @@ def make(mc):
     cov1 = tf.keras.layers.Conv2D(filters=104, kernel_size=(3, 3), activation='relu', padding="same")(inputs)
     m1 = tf.keras.layers.MaxPool2D(pool_size=(2, 1))(cov1)
     bn1 = tf.keras.layers.BatchNormalization()(m1)
+    dr1 = tf.keras.layers.Dropout(dr)(bn1)
 
-    cov2 = tf.keras.layers.Conv2D(filters=156, kernel_size=(3, 3), activation='relu', padding="same")(bn1)
+    cov2 = tf.keras.layers.Conv2D(filters=156, kernel_size=(3, 3), activation='relu', padding="same")(dr1)
     m2 = tf.keras.layers.MaxPool2D(pool_size=(2, 1))(cov2)
     bn2 = tf.keras.layers.BatchNormalization()(m2)
+    dr2 = tf.keras.layers.Dropout(dr)(bn2)
 
-    cov3 = tf.keras.layers.Conv2D(filters=208, kernel_size=(3, 3), activation='relu', padding="same")(bn2)
+    cov3 = tf.keras.layers.Conv2D(filters=208, kernel_size=(3, 3), activation='relu', padding="same")(dr2)
     m3 = tf.keras.layers.MaxPool2D(pool_size=(2, 1))(cov3)
     bn3 = tf.keras.layers.BatchNormalization()(m3)
+    dr3 = tf.keras.layers.Dropout(dr)(bn3)
 
-    cov4 = tf.keras.layers.Conv2D(filters=260, kernel_size=(3, 3), activation='relu', padding="same")(bn3)
+    cov4 = tf.keras.layers.Conv2D(filters=260, kernel_size=(3, 3), activation='relu', padding="same")(dr3)
     m4 = tf.keras.layers.MaxPool2D(pool_size=(2, 1))(cov4)
     bn4 = tf.keras.layers.BatchNormalization()(m4)
+    dr4 = tf.keras.layers.Dropout(dr)(bn4)
 
-    fms = tf.reshape(bn4, [-1, mc.width, 260])
+    fms = tf.reshape(dr4, [-1, mc.width, 260])
 
-    lstm = tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(units=128, return_sequences=True, dropout=dr))(fms)
+    lstm = tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(units=128, return_sequences=True, dropout=0.5), merge_mode='sum')(fms)
+    lstm2 = tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(units=128, return_sequences=True, dropout=0.5))(lstm)
 
-    outputs = tf.keras.layers.Dense(mc.output_cat + 1, activation='softmax')(lstm)
+    outputs = tf.keras.layers.Dense(mc.output_cat + 1, activation='softmax')(lstm2)
 
     model = tf.keras.Model(inputs=inputs, outputs=outputs)
     return model
