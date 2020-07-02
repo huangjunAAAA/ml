@@ -4,7 +4,7 @@ LOADCKT=False
 TRAIN=True
 
 import loadsamples as ld
-import crnnmodel2 as nnm
+import crnnmodel as nnm
 import tensorflow.keras as keras
 
 from datetime import datetime
@@ -32,7 +32,7 @@ logdir = "../tflogs/f6/" + datetime.now().strftime("%Y%m%d-%H%M%S")
 logcb = keras.callbacks.TensorBoard(log_dir=logdir, profile_batch=2, histogram_freq=1, write_grads=True)
 chkcb = keras.callbacks.ModelCheckpoint(filepath=ckpath, verbose=1)
 if TRAIN:
-    y, x = ld.loadsample("../samples/outputV_20w")
+    y, x = ld.loadsample("../samples/outputV_30w")
     crnn.compile(optimizer='adam', loss=nnm.ctc_loss)
     crnn.fit(x=x, y=y, batch_size=100, epochs=100, validation_data=(tx, ty), callbacks=[logcb, chkcb])
 else:
