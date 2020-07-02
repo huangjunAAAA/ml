@@ -4,9 +4,9 @@ import tensorflow.keras as keras
 from datetime import datetime
 import os
 
-ENABLECKT=True
+ENABLECKT=False
 
-y, x = ld.loadsample("../samples/output4_24w")
+y, x = ld.loadsample("../samples/output4_6w")
 vy, vx = ld.loadsample("../samples/val4")
 # tx, ty, vx, vy = ld.extravset(x, y)
 
@@ -29,7 +29,7 @@ print(cnn.summary())
 logdir = "../tflogs/f5/" + datetime.now().strftime("%Y%m%d-%H%M%S")
 logcb = keras.callbacks.TensorBoard(log_dir=logdir, profile_batch=2, histogram_freq=1, write_grads=True)
 chkcb = keras.callbacks.ModelCheckpoint(filepath=ckpath, verbose=1)
-cnn.fit(x=x, y=y, batch_size=300, epochs=50, validation_split=0.1, callbacks=[logcb, chkcb])
+cnn.fit(x=x, y=y, batch_size=100, epochs=50, validation_data=(vx,vy), callbacks=[logcb, chkcb])
 
 
 

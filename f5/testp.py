@@ -1,13 +1,13 @@
 import loadsamples as ld
-import nnmodel2 as nnm
+import nnmodel3 as nnm
 import onehot as oh
 import tensorflow.keras as keras
 from datetime import datetime
 import os
 
 
-y, x = ld.loadsample("../samples/val4")
-vy, vx = ld.loadsample("../samples/val4")
+y, x = ld.loadsample("../samples/val10")
+vy, vx = ld.loadsample("../samples/val10")
 # tx, ty, vx, vy = ld.extravset(x, y)
 
 cfg = nnm.ModelConfig()

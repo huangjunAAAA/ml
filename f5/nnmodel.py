@@ -18,8 +18,9 @@ def more_char_acc(y_true, y_pred):
     y1 = tf.reshape(y_pred, [-1, num_char, 26])
     y1max = tf.math.argmax(y1, axis=2)
     r1 = tf.equal(y1max, y2max)
-    r2 = tf.cast(r1, tf.float32)
-    k = tf.reduce_mean(r2)
+    r2 = tf.map_fn(fn=lambda e:tf.reduce_all(e), elems=r1)
+    r3 = tf.cast(r2, tf.float32)
+    k = tf.reduce_mean(r3)
     return k
 
 def make(mc):

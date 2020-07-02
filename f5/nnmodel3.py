@@ -18,8 +18,9 @@ def more_char_acc(y_true, y_pred):
     y1 = tf.reshape(y_pred, [-1, num_char, 26])
     y1max = tf.math.argmax(y1, axis=2)
     r1 = tf.equal(y1max, y2max)
-    r2 = tf.cast(r1, tf.float32)
-    k = tf.reduce_mean(r2)
+    r2 = tf.map_fn(fn=lambda e:tf.reduce_all(e), elems=r1)
+    r3 = tf.cast(r2, tf.float32)
+    k = tf.reduce_mean(r3)
     return k
 
 def make(mc):
@@ -31,25 +32,32 @@ def make(mc):
         ips = (3, mc.height, mc.width)
 
     seq = tf.keras.Sequential()
-    seq.add(tf.keras.layers.Conv2D(filters=104, kernel_size=(3, 3), activation='relu', input_shape=ips, padding="same"))
-    seq.add(tf.keras.layers.MaxPool2D(pool_size=(2, 2)))
-    seq.add(tf.keras.layers.Lambda(printx))
+    seq.add(tf.keras.layers.Conv2D(filters=128, kernel_size=(2, 2), activation='relu', input_shape=ips, padding="same"))
     seq.add(tf.keras.layers.BatchNormalization())
+    seq.add(tf.keras.layers.Conv2D(filters=128, kernel_size=(2, 2), activation='relu', padding="same"))
+    seq.add(tf.keras.layers.BatchNormalization())
+    seq.add(tf.keras.layers.MaxPool2D(pool_size=(2, 2)))
     seq.add(tf.keras.layers.Dropout(dr))
 
-    seq.add(tf.keras.layers.Conv2D(filters=156, kernel_size=(3, 3), activation='relu', padding="same"))
-    seq.add(tf.keras.layers.MaxPool2D(pool_size=(2, 2)))
+    seq.add(tf.keras.layers.Conv2D(filters=128, kernel_size=(2, 2), activation='relu', padding="same"))
     seq.add(tf.keras.layers.BatchNormalization())
+    seq.add(tf.keras.layers.Conv2D(filters=128, kernel_size=(2, 2), activation='relu', padding="same"))
+    seq.add(tf.keras.layers.BatchNormalization())
+    seq.add(tf.keras.layers.MaxPool2D(pool_size=(2, 2)))
     seq.add(tf.keras.layers.Dropout(dr))
 
-    seq.add(tf.keras.layers.Conv2D(filters=208, kernel_size=(3, 3), activation='relu', padding="same"))
-    seq.add(tf.keras.layers.MaxPool2D(pool_size=(2, 2)))
+    seq.add(tf.keras.layers.Conv2D(filters=256, kernel_size=(2, 2), activation='relu', padding="same"))
     seq.add(tf.keras.layers.BatchNormalization())
+    seq.add(tf.keras.layers.Conv2D(filters=256, kernel_size=(2, 2), activation='relu', padding="same"))
+    seq.add(tf.keras.layers.BatchNormalization())
+    seq.add(tf.keras.layers.MaxPool2D(pool_size=(2, 2)))
     seq.add(tf.keras.layers.Dropout(dr))
 
-    seq.add(tf.keras.layers.Conv2D(filters=260, kernel_size=(3, 3), activation='relu', padding="same"))
-    seq.add(tf.keras.layers.MaxPool2D(pool_size=(2, 2)))
+    seq.add(tf.keras.layers.Conv2D(filters=256, kernel_size=(2, 2), activation='relu', padding="same"))
     seq.add(tf.keras.layers.BatchNormalization())
+    seq.add(tf.keras.layers.Conv2D(filters=256, kernel_size=(2, 2), activation='relu', padding="same"))
+    seq.add(tf.keras.layers.BatchNormalization())
+    seq.add(tf.keras.layers.MaxPool2D(pool_size=(2, 2)))
     seq.add(tf.keras.layers.Dropout(dr))
 
 
