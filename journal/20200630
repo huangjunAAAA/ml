@@ -1,5 +1,0 @@
-很愉快的发现了样本数不整除批次数的bug。
-
-再次很愉快的发现了 tf.keras.backend.ctc_decode 已经帮忙处理了SparseTensor
-
-crnn的图搞定了，经历了地狱般的过程。接下来调整参数，训练实在太慢了。
